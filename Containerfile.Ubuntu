@@ -1,0 +1,14 @@
+FROM ubuntu:22.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN set -eux; \
+ apt-get update && apt-get install -y wget unzip openjdk-8-jre; \
+ wget -q https://repo1.maven.org/maven2/org/primefaces/primefaces-showcase/12.0.0/primefaces-showcase-12.0.0.war; \
+ wget -q https://dlcdn.apache.org/tomee/tomee-8.0.15/apache-tomee-8.0.15-plume.tar.gz; \
+ tar xzf apache-tomee-8.0.15-plume.tar.gz -C /opt; \
+ rm /opt/apache-tomee-plume-8.0.15/bin/*.bat; \
+ rm /opt/apache-tomee-plume-8.0.15/webapps/* -rf; \
+ unzip primefaces-showcase-12.0.0.war -d /opt/apache-tomee-plume-8.0.15/webapps/ROOT
+
+EXPOSE 8080
+WORKDIR /opt/apache-tomee-plume-8.0.15/bin
+CMD "./catalina.sh" "run"
