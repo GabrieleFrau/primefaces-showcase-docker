@@ -1,6 +1,6 @@
+FROM ubuntu:22.04
 LABEL org.opencontainers.image.source=https://github.com/GabrieleFrau/primefaces-showcase-docker
 LABEL org.opencontainers.image.description="Container image for primefaces showcase"
-FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -eux; \
  apt-get update && apt-get install -y wget unzip openjdk-8-jre; \
