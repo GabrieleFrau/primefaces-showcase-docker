@@ -1,8 +1,10 @@
+LABEL org.opencontainers.image.source=https://github.com/GabrieleFrau/primefaces-showcase-docker
+LABEL org.opencontainers.image.description="Container image for primefaces showcase"
 FROM rockylinux:9
 RUN set -eux; \
  dnf update -y && dnf install -y wget unzip java-1.8.0-openjdk-headless; \
  wget -q https://repo1.maven.org/maven2/org/primefaces/primefaces-showcase/12.0.0/primefaces-showcase-12.0.0.war; \
- wget -q https://dlcdn.apache.org/tomee/tomee-8.0.15/apache-tomee-8.0.15-plume.tar.gz; \
+ wget -q https://archive.apache.org/dist/tomee/tomee-8.0.15/apache-tomee-8.0.15-plume.tar.gz; \
  tar xzf apache-tomee-8.0.15-plume.tar.gz -C /opt; \
  rm /opt/apache-tomee-plume-8.0.15/bin/*.bat; \
  rm /opt/apache-tomee-plume-8.0.15/webapps/* -rf; \
