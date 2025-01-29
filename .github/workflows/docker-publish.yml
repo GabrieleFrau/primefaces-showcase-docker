@@ -67,6 +67,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Step required to ensure the correct handling of arm64 builds
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
@@ -74,13 +80,17 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      
+      # Step required to ensure the correct handling of arm64 builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image (Ubuntu)
         id: build-and-push-ubuntu
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-
           platforms: ${{ matrix.platform }}
           context: .
           file: Containerfile.Ubuntu
@@ -95,6 +105,7 @@ jobs:
         id: build-and-push-rocky
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
+          platforms: ${{ matrix.platform }}
           context: .
           file: Containerfile.Rocky
           push: ${{ github.event_name != 'pull_request' }}
